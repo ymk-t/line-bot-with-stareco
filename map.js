@@ -1,4 +1,5 @@
 const axios = require('axios')
+require('dotenv').config()
 
 exports.callMap = function (text) {
   const response = axios.get(
@@ -14,8 +15,5 @@ exports.callMap = function (text) {
       }
     }
   )
-  return {
-    statusCode: 200,
-    body: JSON.stringify(response.data)
-  }
+  return JSON.stringify(response.data)
 }
