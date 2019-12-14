@@ -1,7 +1,7 @@
 const axios = require('axios')
 
-exports.callMap = async function (text) {
-  const response = await axios.get(
+exports.callMap = function (text) {
+  const response = axios.get(
     'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
     {
       method: 'get',
