@@ -2,6 +2,7 @@
 // モジュールのインポート
 const server = require("express")();
 const line = require("@line/bot-sdk"); // Messaging APIのSDKをインポート
+const map = require("./map");
 
 // -----------------------------------------------------------------------------
 // パラメータ設定
@@ -31,14 +32,17 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text"){
+            const result = map.callMap(event.message.text)
+            
             // replyMessage()で返信し、そのプロミスをevents_processedに追加。
             events_processed.push(bot.replyMessage(event.replyToken, {
                 type: "text",
-                text: "こんにちは！現在このチャンネルは作成途中です。"
+                text: result.candidates[0].name
             }));
+
             events_processed.push(bot.replyMessage(event.replyToken, {
                 type: "text",
-                text: "機能追加できましたらお知らせしますので、しばらくお待ちください。。。"
+                text: response.candidates[0].photos[0].photo_reference
             }));
         }
     });
@@ -46,6 +50,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     // すべてのイベント処理が終了したら何個のイベントが処理されたか出力。
     Promise.all(events_processed).then(
         (response) => {
+            console.log(`${response.length} event(s) processed.`);
             console.log(`${response.length} event(s) processed.`);
         }
     );
