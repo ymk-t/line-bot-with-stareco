@@ -34,7 +34,11 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
             // replyMessage()で返信し、そのプロミスをevents_processedに追加。
             events_processed.push(bot.replyMessage(event.replyToken, {
                 type: "text",
-                text: "これはこれは"
+                text: "こんにちは！現在このチャンネルは作成途中です。"
+            }));
+            events_processed.push(bot.replyMessage(event.replyToken, {
+                type: "text",
+                text: "機能追加できましたらお知らせしますので、しばらくお待ちください。。。"
             }));
         }
     });
