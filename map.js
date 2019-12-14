@@ -1,7 +1,6 @@
 exports.callMap = function (text) {
   
   const axios = require('axios')
-  require('dotenv').config()
 
   const response = await axios.get(
     'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
