@@ -14,5 +14,8 @@ exports.callMap = function (text) {
       }
     }
   )
-  return JSON.stringify(response.data)
+  return {
+    statusCode: 200,
+    body: JSON.stringify(response.data)
+  }
 }
