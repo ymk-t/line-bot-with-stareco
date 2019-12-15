@@ -37,11 +37,11 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                 console.log(result);
                 events_processed.push(bot.replyMessage(event.replyToken, {
                     type: "text",
-                    text: result.candidates[0].name
+                    text: result.name
                 }));
                 events_processed.push(bot.replyMessage(event.replyToken, {
                     type: "text",
-                    text: result.candidates[0].photos[0].photo_reference
+                    text: result.photo_reference
                 }));
             }).catch((errorMessage) => {
                 console.log(errorMessage);

@@ -19,9 +19,9 @@ async function searchStarbucks (text) {
       }
     }
   );
-  const res = [];
-  res.append('name', response.data.candidates[0].name);
-  res.append('name', response.data.candidates[0].photos[0].photo_reference);
+  const res = {};
+  res.name = response.data.candidates[0].name;
+  res.photo_reference = response.data.candidates[0].photos[0].photo_reference;
 
   return res
 }
