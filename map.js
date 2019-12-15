@@ -20,5 +20,5 @@ async function searchStarbucks (text) {
     }
   );
   console.log(response.data);
-  return JSON.stringify(response.data);
+  return JSON.parse(response.data);
 }
