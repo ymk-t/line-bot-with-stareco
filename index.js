@@ -34,6 +34,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
         if (event.type == "message" && event.message.type == "text") {
             const result = map.callMap(event.message.text).then(() => {
                 // replyMessage()で返信し、そのプロミスをevents_processedに追加。
+                console.log(result)
                 events_processed.push(bot.replyMessage(event.replyToken, {
                     type: "text",
                     text: result.candidates[0].name
@@ -49,7 +50,6 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     // すべてのイベント処理が終了したら何個のイベントが処理されたか出力。
     Promise.all(events_processed).then(
         (response) => {
-            console.log(`${response.length} event(s) processed.`);
             console.log(`${response.length} event(s) processed.`);
         }
     );
