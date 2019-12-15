@@ -32,7 +32,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
-            const result = map.callMap(event.message.text).then(() => {
+            map.callMap(event.message.text).then((result) => {
                 // replyMessage()で返信し、そのプロミスをevents_processedに追加。
                 console.log(result)
                 events_processed.push(bot.replyMessage(event.replyToken, {
