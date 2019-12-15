@@ -19,6 +19,6 @@ async function searchStarbucks (text) {
       }
     }
   );
-  console.log(response.data);
-  return JSON.parse(response.data);
+  console.log(response.data.candidate[0]);
+  return JSON.parse(response.data.candidate[0]);
 }
