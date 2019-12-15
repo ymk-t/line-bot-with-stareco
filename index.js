@@ -34,7 +34,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
         if (event.type == "message" && event.message.type == "text") {
             map.callMap(event.message.text).then((result) => {
                 // replyMessage()で返信し、そのプロミスをevents_processedに追加。
-                console.log(result)
+                console.log(result);
                 events_processed.push(bot.replyMessage(event.replyToken, {
                     type: "text",
                     text: result.candidates[0].name
@@ -43,6 +43,8 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                     type: "text",
                     text: result.candidates[0].photos[0].photo_reference
                 }));
+            }).catch((errorMessage) => {
+                console.log(errorMessage);
             });
         }
     });
