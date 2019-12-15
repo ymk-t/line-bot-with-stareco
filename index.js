@@ -39,10 +39,13 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                     type: "text",
                     text: result.name
                 }));
+
+                // Photo API機能をここに入れる。
                 // events_processed.push(bot.replyMessage(event.replyToken, {
                 //     type: "text",
                 //     text: result.photo_reference
                 // }));
+                
             }).catch((errorMessage) => {
                 console.log(errorMessage);
             });
