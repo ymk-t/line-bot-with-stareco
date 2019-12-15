@@ -32,23 +32,17 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text"){
-            const result = map.callMap(event.message.text).then(() => {
-                console.log('OK')
+            const result = await map.callMap(event.message.text).then(() => {
+                // replyMessage()で返信し、そのプロミスをevents_processedに追加。
+                events_processed.push(bot.replyMessage(event.replyToken, {
+                    type: "text",
+                    text: result.candidates[0].name
+                }));
+                events_processed.push(bot.replyMessage(event.replyToken, {
+                    type: "text",
+                    text: result.candidates[0].photos[0].photo_reference
+                }));
             });
-            
-            console.log(event.message.text)
-            console.log(result)
-            
-            // replyMessage()で返信し、そのプロミスをevents_processedに追加。
-            events_processed.push(bot.replyMessage(event.replyToken, {
-                type: "text",
-                text: result.candidates[0].name
-            }));
-
-            events_processed.push(bot.replyMessage(event.replyToken, {
-                type: "text",
-                text: result.candidates[0].photos[0].photo_reference
-            }));
         }
     });
 
