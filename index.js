@@ -39,10 +39,10 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                     type: "text",
                     text: result.name
                 }));
-                events_processed.push(bot.replyMessage(event.replyToken, {
-                    type: "text",
-                    text: result.photo_reference
-                }));
+                // events_processed.push(bot.replyMessage(event.replyToken, {
+                //     type: "text",
+                //     text: result.photo_reference
+                // }));
             }).catch((errorMessage) => {
                 console.log(errorMessage);
             });
