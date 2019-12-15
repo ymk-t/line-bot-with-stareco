@@ -3,7 +3,7 @@ const axios = require('axios')
 exports.callMap = function (text) {
   const result = searchStarbucks(text)
   return result
-}
+};
 
 async function searchStarbucks (text) {
   const response = await axios.get(
@@ -18,6 +18,7 @@ async function searchStarbucks (text) {
         key: process.env.GOOGLE_MAP_API
       }
     }
-  )
+  );
+  console.log(response.data)
   return JSON.stringify(response.data)
 }
