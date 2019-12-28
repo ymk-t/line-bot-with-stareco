@@ -28,13 +28,11 @@ server.post('/bot/webhook', middle, (req, res) => {
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
 
-    console.log(req.body.events)
-
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result))
       .catch((errorMessage) => {
-        console.log("エラー:" + errorMessage);
+        console.log("【indev.js】" + errorMessage);
     })
 })
 // イベントオブジェクトを順次処理。

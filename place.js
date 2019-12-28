@@ -5,7 +5,7 @@ exports.callPlace = function (text) {
     const result = searchStarbucks(text)
     return result
   } catch (errorMessage) {
-    console.log(errorMessage);
+    console.log("【place.js】" + errorMessage);
   }
 };
 

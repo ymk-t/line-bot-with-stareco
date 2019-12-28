@@ -5,11 +5,12 @@ exports.callPhoto = function (photoId) {
     const result = searchPhoto(photoId)
     return result
   } catch (errorMessage) {
-    console.log(errorMessage);
+    console.log("【photo.js】" + errorMessage);
   }
 };
 
 async function searchPhoto (photoId) {
+  let res = ""
   const response = await axios.get('https://maps.googleapis.com/maps/api/place/photo', {
     method: 'get',
     params: {
@@ -18,5 +19,6 @@ async function searchPhoto (photoId) {
       key: process.env.GOOGLE_MAP_API
     }
   });
-  return response.request.res.responseUrl
+  res = response.request.res.responseUrl
+  return res
 }
