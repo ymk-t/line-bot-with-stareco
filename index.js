@@ -22,7 +22,8 @@ const bot = new line.Client(line_config);
 
 // -----------------------------------------------------------------------------
 // ルーター設定
-server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
+line.middleware(line_config);
+server.post('/bot/webhook', (req, res) => {
 
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
