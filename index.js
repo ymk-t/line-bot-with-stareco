@@ -39,7 +39,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                 console.log(placeResult);
                 
                 // プレビュー用の画像を取得する
-                photo.callPhoto(placeResult).then((photoResult) => {
+                photo.callPhoto(placeResult.photo_reference).then((photoResult) => {
                     
                     // replyMessage()で返信し、そのプロミスをevents_processedに追加。
                     events_processed.push(bot.replyMessage(event.replyToken, {
