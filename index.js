@@ -48,10 +48,11 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                     events_processed.push(bot.replyMessage(event.replyToken, {
                         type: "templete",
                         altText: "This is a carousel templete",
-                        templete: {
+                        template: {
                             type: "carousel",
                             columns: [
                                 {
+                                    thumbnailImageUrl: photoResult,
                                     text: placeResult.name,
                                     actions: {
                                         type: "message",
