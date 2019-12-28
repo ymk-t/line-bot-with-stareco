@@ -48,14 +48,15 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                     events_processed.push(bot.replyMessage(event.replyToken, {
                         type: "templete",
                         templete: {
-                            type: "image_carousel",
+                            type: "carousel",
                             columns: [
                                 {
-                                    imageUrl: photoResult,
-                                    action: {
-                                        type: "message ",
-                                        label: "PlaceName",
-                                        text: placeResult.name
+                                    thumbnailImageUrl: photoResult,
+                                    text: placeResult.name,
+                                    actions: {
+                                        type: "message",
+                                        label: "photoReference",
+                                        text: "photoReference"
                                     }
                                 }
                             ]
