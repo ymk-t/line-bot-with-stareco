@@ -2,7 +2,8 @@
 // モジュールのインポート
 const server = require("express")();
 const line = require("@line/bot-sdk"); // Messaging APIのSDKをインポート
-const map = require("./map");
+const place = require("./place");
+const photo = require("./photo");
 
 // -----------------------------------------------------------------------------
 // パラメータ設定
@@ -32,20 +33,32 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
-            map.callMap(event.message.text).then((result) => {
-                // replyMessage()で返信し、そのプロミスをevents_processedに追加。
-                console.log(result);
-                events_processed.push(bot.replyMessage(event.replyToken, {
-                    type: "text",
-                    text: result.name
-                }));
-
-                // Photo API機能をここに入れる。
-                // events_processed.push(bot.replyMessage(event.replyToken, {
-                //     type: "text",
-                //     text: result.photo_reference
-                // }));
+            place.callPlace(event.message.text).then((placeResult) => {
                 
+                // 確認用にメッセージを出力
+                console.log(placeResult);
+                
+                // プレビュー用の画像を取得する
+                photo.callPhoto(placeResult).then((photoResult) => {
+                    
+                    // replyMessage()で返信し、そのプロミスをevents_processedに追加。
+                    events_processed.push(bot.replyMessage(event.replyToken, {
+                        type: "templete",
+                        templete: {
+                            type: "image_carousel",
+                            colmuns: [
+                                {
+                                    imageUrl: photoResult,
+                                    action: {
+                                        type: "message ",
+                                        label: "PlaceName",
+                                        text: placeResult.name
+                                    }
+                                }
+                            ]
+                        }
+                    }));
+                });
             }).catch((errorMessage) => {
                 console.log(errorMessage);
             });

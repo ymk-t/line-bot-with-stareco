@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-exports.callMap = function (text) {
+exports.callPlace = function (text) {
   const result = searchStarbucks(text)
   return result
 };
