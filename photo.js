@@ -15,4 +15,9 @@ async function searchPhoto (photoId) {
     }
   });
   return response.request.res.responseUrl
+
+  .catch((errorMessage) => {
+    console.log(errorMessage);
+  })
+  
 }

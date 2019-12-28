@@ -6,6 +6,8 @@ exports.callPlace = function (text) {
 };
 
 async function searchStarbucks (text) {
+  const res = {};
+
   const response = await axios.get(
     'https://maps.googleapis.com/maps/api/place/findplacefromtext/json',
     {
@@ -19,9 +21,12 @@ async function searchStarbucks (text) {
       }
     }
   );
-  const res = {};
   res.name = response.data.candidates[0].name;
   res.photo_reference = response.data.candidates[0].photos[0].photo_reference;
-
+  
   return res
+
+  .catch((errorMessage) => {
+    console.log(errorMessage);
+  })
 }
