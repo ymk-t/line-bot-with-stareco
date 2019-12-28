@@ -31,42 +31,43 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
     const placeInfo = {};
     const photoUrl = "";
 
-    // イベントオブジェクトを順次処理。
-    req.body.events.forEach((event) => {
-        // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
-        if (event.type == "message" && event.message.type == "text") {
-
-            //  場所情報を取得する
-            placeInfo = place.callPlace(event.message.text);                
-            
-            // プレビュー用の画像を取得する
-            photoUrl = photo.callPhoto(placeInfo.photo_reference)
-        }
-    })
-            
-    // replyMessage()で返信する
-    Promise.all(placeInfo, photoUrl).then((response) => {
-        console.log(response)
-        return bot.replyMessage(event.replyToken, {
-            "type": "template",
-            "altText": "This is a carousel template",
-            "template": {
-                "type": "carousel",
-                "columns": [
-                    {
-                        "thumbnailImageUrl": photoUrl,
-                        "text": placeInfo.name,
-                        "actions": {
-                            "type": "message",
-                            "label": "photoReference",
-                            "text": "photoReference"
-                        }
-                    }
-                ]
-            }
-        })
-    })
-    .catch((errorMessage) => {
+    Promise
+      .all(req.body.events.map(handleEvent))
+      .then((result) => res.json(result))
+      .catch((errorMessage) => {
         console.log("エラー:" + errorMessage);
     })
 })
+// イベントオブジェクトを順次処理。
+function handleEvent(event) {
+    // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
+    if (event.type == "message" && event.message.type == "text") {
+
+        //  場所情報を取得する
+        placeInfo = place.callPlace(event.message.text);                
+        
+        // プレビュー用の画像を取得する
+        photoUrl = photo.callPhoto(placeInfo.photo_reference)
+    }          
+
+    console.log(response)
+    
+    return bot.replyMessage(event.replyToken, {
+        "type": "template",
+        "altText": "This is a carousel template",
+        "template": {
+            "type": "carousel",
+            "columns": [
+                {
+                    "thumbnailImageUrl": photoUrl,
+                    "text": placeInfo.name,
+                    "actions": {
+                        "type": "message",
+                        "label": "photoReference",
+                        "text": "photoReference"
+                    }
+                }
+            ]
+        }
+    })
+}
