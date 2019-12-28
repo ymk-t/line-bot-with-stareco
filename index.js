@@ -49,7 +49,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                         type: "templete",
                         templete: {
                             type: "image_carousel",
-                            colmuns: [
+                            columns: [
                                 {
                                     imageUrl: photoResult,
                                     action: {
