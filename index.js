@@ -27,10 +27,6 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
 
-    let events_processed = [];
-    const placeInfo = {};
-    const photoUrl = "";
-
     Promise
       .all(req.body.events.map(handleEvent))
       .then((result) => res.json(result))
@@ -40,6 +36,9 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
 })
 // イベントオブジェクトを順次処理。
 function handleEvent(event) {
+    const placeInfo = {};
+    const photoUrl = "";
+
     // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
     if (event.type == "message" && event.message.type == "text") {
 
@@ -49,8 +48,6 @@ function handleEvent(event) {
         // プレビュー用の画像を取得する
         photoUrl = photo.callPhoto(placeInfo.photo_reference)
     }          
-
-    console.log(response)
     
     return bot.replyMessage(event.replyToken, {
         "type": "template",
