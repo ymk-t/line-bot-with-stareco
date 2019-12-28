@@ -36,8 +36,8 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
 })
 // イベントオブジェクトを順次処理。
 function handleEvent(event) {
-    const placeInfo = {};
-    const photoUrl = "";
+    let placeInfo = {};
+    let photoUrl = "";
 
     // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
     if (event.type == "message" && event.message.type == "text") {
