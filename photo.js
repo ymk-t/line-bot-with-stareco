@@ -1,8 +1,12 @@
 const axios = require('axios')
 
 exports.callPhoto = function (photoId) {
-  const result = searchPhoto(photoId)
-  return result
+  try {
+    const result = searchPhoto(photoId)
+    return result
+  } catch (errorMessage) {
+    console.log(errorMessage);
+  }
 };
 
 async function searchPhoto (photoId) {
@@ -15,9 +19,4 @@ async function searchPhoto (photoId) {
     }
   });
   return response.request.res.responseUrl
-
-  .catch((errorMessage) => {
-    console.log(errorMessage);
-  })
-  
 }

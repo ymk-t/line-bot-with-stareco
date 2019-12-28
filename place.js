@@ -1,8 +1,12 @@
 const axios = require('axios')
 
 exports.callPlace = function (text) {
-  const result = searchStarbucks(text)
-  return result
+  try {
+    const result = searchStarbucks(text)
+    return result
+  } catch (errorMessage) {
+    console.log(errorMessage);
+  }
 };
 
 async function searchStarbucks (text) {
@@ -25,8 +29,4 @@ async function searchStarbucks (text) {
   res.photo_reference = response.data.candidates[0].photos[0].photo_reference;
   
   return res
-
-  .catch((errorMessage) => {
-    console.log(errorMessage);
-  })
-}
+}  
