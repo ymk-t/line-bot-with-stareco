@@ -51,7 +51,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                             type: "carousel",
                             columns: [
                                 {
-                                    thumbnailImageUrl: photoResult,
+                                    // thumbnailImageUrl: photoResult,
                                     text: placeResult.name,
                                     actions: {
                                         type: "message",
