@@ -23,14 +23,15 @@ const bot = new line.Client(line_config);
 // -----------------------------------------------------------------------------
 // ルーター設定
 server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
+
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
 
     // イベントオブジェクトを順次処理。
-    async.req.body.events.forEach((event) => {
+    req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
-            await place.callPlace(event.message.text).then((placeResult) => {
+            place.callPlace(event.message.text).then((placeResult) => {
                 
                 // 確認用にメッセージを出力
                 console.log(placeResult);
@@ -61,8 +62,6 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                         }
                     });
                 });
-            }).catch((errorMessage) => {
-                console.log(errorMessage);
             });
         }
     });
