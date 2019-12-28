@@ -26,14 +26,11 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
 
-    // すべてのイベント処理のプロミスを格納する配列。
-    let events_processed = [];
-
     // イベントオブジェクトを順次処理。
-    req.body.events.forEach((event) => {
+    async.req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
-            place.callPlace(event.message.text).then((placeResult) => {
+            await place.callPlace(event.message.text).then((placeResult) => {
                 
                 // 確認用にメッセージを出力
                 console.log(placeResult);
@@ -45,7 +42,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                     console.log(photoResult);
 
                     // replyMessage()で返信し、そのプロミスをevents_processedに追加。
-                    events_processed.push(bot.replyMessage(event.replyToken, {
+                    bot.replyMessage(event.replyToken, {
                         "type": "template",
                         "altText": "This is a carousel template",
                         "template": {
@@ -62,7 +59,7 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
                                 }
                             ]
                         }
-                    }));
+                    });
                 });
             }).catch((errorMessage) => {
                 console.log(errorMessage);
