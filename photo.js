@@ -14,7 +14,7 @@ async function searchPhoto (photoId) {
       key: process.env.GOOGLE_MAP_API
     }
   });
-  const res;
+  const res = "";
   res = response.request.res.responseUrl
   return res
 }
