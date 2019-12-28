@@ -38,7 +38,7 @@ server.post('/bot/webhook', middle, (req, res) => {
     })
 })
 // イベントオブジェクトを順次処理。
-function handleEvent(event) {
+async function handleEvent(event) {
     let placeInfo = {};
     let photoUrl = "";
 
@@ -46,10 +46,10 @@ function handleEvent(event) {
     if (event.type == "message" && event.message.type == "text") {
 
         //  場所情報を取得する
-        placeInfo = place.callPlace(event.message.text);                
+        placeInfo = await place.callPlace(event.message.text);                
         
         // プレビュー用の画像を取得する
-        photoUrl = photo.callPhoto(placeInfo.photo_reference)
+        photoUrl = await photo.callPhoto(placeInfo.photo_reference)
     }          
     
     return bot.replyMessage(event.replyToken, {
