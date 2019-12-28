@@ -46,18 +46,18 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res, next) => {
 
                     // replyMessage()で返信し、そのプロミスをevents_processedに追加。
                     events_processed.push(bot.replyMessage(event.replyToken, {
-                        type: "template",
-                        altText: "This is a carousel templete",
-                        template: {
-                            type: "carousel",
-                            columns: [
+                        "type": "template",
+                        "altText": "This is a carousel template",
+                        "template": {
+                            "type": "carousel",
+                            "columns": [
                                 {
-                                    thumbnailImageUrl: photoResult,
-                                    text: placeResult.name,
-                                    actions: {
-                                        type: "message",
-                                        label: "photoReference",
-                                        text: "photoReference"
+                                    "thumbnailImageUrl": photoResult,
+                                    "text": placeResult.name,
+                                    "actions": {
+                                        "type": "message",
+                                        "label": "photoReference",
+                                        "text": "photoReference"
                                     }
                                 }
                             ]
