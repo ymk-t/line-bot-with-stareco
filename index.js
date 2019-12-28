@@ -27,44 +27,53 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
 
+    Promise
     // イベントオブジェクトを順次処理。
-    req.body.events.forEach((event) => {
+    .all(req.body.events.forEach((event) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
+
+            const placeInfo = {};
+            const photoUrl = "";
+
             place.callPlace(event.message.text).then((placeResult) => {
                 
                 // 確認用にメッセージを出力
                 console.log(placeResult);
-                
-                // プレビュー用の画像を取得する
-                photo.callPhoto(placeResult.photo_reference).then((photoResult) => {
-                    
-                    // 確認用にメッセージを出力
-                    console.log(photoResult);
-
-                    // replyMessage()で返信し、そのプロミスをevents_processedに追加。
-                    bot.replyMessage(event.replyToken, {
-                        "type": "template",
-                        "altText": "This is a carousel template",
-                        "template": {
-                            "type": "carousel",
-                            "columns": [
-                                {
-                                    "thumbnailImageUrl": photoResult,
-                                    "text": placeResult.name,
-                                    "actions": {
-                                        "type": "message",
-                                        "label": "photoReference",
-                                        "text": "photoReference"
-                                    }
-                                }
-                            ]
-                        }
-                    });
-                });
-            }).catch((errorMessage) => {
-                console.log(errorMessage);
+                placeInfo = placeResult
             });
+                
+            // プレビュー用の画像を取得する
+            photo.callPhoto(placeResult.photo_reference).then((photoResult) => {
+                
+                // 確認用にメッセージを出力
+                console.log(photoResult);
+                photoUrl = photoResult
+            
+            })
         }
-    });
-});
+    }))
+            
+    // replyMessage()で返信し、そのプロミスをevents_processedに追加。
+    .then(bot.replyMessage(event.replyToken, {
+        "type": "template",
+        "altText": "This is a carousel template",
+        "template": {
+            "type": "carousel",
+            "columns": [
+                {
+                    "thumbnailImageUrl": photoResult,
+                    "text": placeResult.name,
+                    "actions": {
+                        "type": "message",
+                        "label": "photoReference",
+                        "text": "photoReference"
+                    }
+                }
+            ]
+        }
+    }))
+    .catch((errorMessage) => {
+        console.log("エラー:" + errorMessage);
+    })
+})
