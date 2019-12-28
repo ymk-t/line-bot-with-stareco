@@ -36,42 +36,35 @@ server.post('/bot/webhook', line.middleware(line_config), (req, res) => {
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
 
-            place.callPlace(event.message.text).then((placeResult) => {
-                
-                // 確認用にメッセージを出力
-                console.log(placeResult);
-                placeInfo = placeResult
-            });
-                
-            // プレビュー用の画像を取得する
-            photo.callPhoto(placeInfo.photo_reference).then((photoResult) => {
-                
-                // 確認用にメッセージを出力
-                console.log(photoResult);
-                photoUrl = photoResult
+            //  場所情報を取得する
+            placeInfo = place.callPlace(event.message.text);                
             
-            })
+            // プレビュー用の画像を取得する
+            photoUrl = photo.callPhoto(placeInfo.photo_reference)
         }
     })
             
     // replyMessage()で返信する
-    return bot.replyMessage(event.replyToken, {
-        "type": "template",
-        "altText": "This is a carousel template",
-        "template": {
-            "type": "carousel",
-            "columns": [
-                {
-                    "thumbnailImageUrl": photoUrl,
-                    "text": placeInfo.name,
-                    "actions": {
-                        "type": "message",
-                        "label": "photoReference",
-                        "text": "photoReference"
+    Promise.all(placeInfo, photoUrl).then((response) => {
+        console.log(response)
+        return bot.replyMessage(event.replyToken, {
+            "type": "template",
+            "altText": "This is a carousel template",
+            "template": {
+                "type": "carousel",
+                "columns": [
+                    {
+                        "thumbnailImageUrl": photoUrl,
+                        "text": placeInfo.name,
+                        "actions": {
+                            "type": "message",
+                            "label": "photoReference",
+                            "text": "photoReference"
+                        }
                     }
-                }
-            ]
-        }
+                ]
+            }
+        })
     })
     .catch((errorMessage) => {
         console.log("エラー:" + errorMessage);
