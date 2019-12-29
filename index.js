@@ -47,20 +47,20 @@ server.post('/bot/webhook', middle, (req, res) => {
     })
 })
 // イベントオブジェクトを順次処理。
-async function handleEvent(request) {
+function handleEvent(request) {
     let placeInfo = {};
     let photoUrl = "";
 
-    req.body.events.forEach((event) => {
+    request.body.events.forEach((event) => {
 
         // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
         if (event.type == "message" && event.message.type == "text") {
 
             //  場所情報を取得する
-            placeInfo = await place.callPlace(event.message.text);                
+            placeInfo = place.callPlace(event.message.text);                
             
             // プレビュー用の画像を取得する
-            photoUrl = await photo.callPhoto(placeInfo.photo_reference)
+            photoUrl = photo.callPhoto(placeInfo.photo_reference)
         }          
         
         events_processed.push(bot.replyMessage(event.replyToken, {
