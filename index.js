@@ -64,7 +64,7 @@ function handleEvent(request) {
             // プレビュー用の画像を取得する
             console.log("photoInfo");
             photoUrl = photo.callPhoto(placeInfo.photo_reference)
-            console.log(photoInfo);
+            console.log(photoUrl);
         }          
         console.log("events_push");
         events_processed.push(bot.replyMessage(event.replyToken, {
