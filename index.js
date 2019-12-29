@@ -66,22 +66,9 @@ function handleEvent(request) {
                     console.log(event.replyToken)
                     console.log(placeResult.name)
                     events_processed.push(bot.replyMessage(event.replyToken, {
-                        "type": "template",
-                        "altText": "This is a carousel template",
-                        "template": {
-                            "type": "carousel",
-                            "columns": [
-                                {
-                                    "thumbnailImageUrl": photoResult,
-                                    "text": placeResult.name,
-                                    "actions": {
-                                        "type": "message",
-                                        "label": "photoReference",
-                                        "text": "photoReference"
-                                    }
-                                }
-                            ]
-                        }
+                        "type": "image",
+                        "originalContentUrl": photoResult,
+                        "previewImageUrl": photoResult
                     }));
                 });
             });
