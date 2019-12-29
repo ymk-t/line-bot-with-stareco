@@ -63,6 +63,7 @@ function handleEvent(request) {
                 
                     // 返信メッセージをイベントオブジェクトに挿入する
                     console.log(photoResult)
+                    console.log(event.replyToken)
                     events_processed.push(bot.replyMessage(event.replyToken, {
                         "type": "template",
                         "altText": "This is a carousel template",
