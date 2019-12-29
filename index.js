@@ -48,8 +48,6 @@ server.post('/bot/webhook', middle, (req, res) => {
 })
 // イベントオブジェクトを順次処理。
 function handleEvent(request) {
-    let placeInfo = {};
-    let photoUrl = "";
 
     request.body.events.forEach((event) => {
 
@@ -57,19 +55,12 @@ function handleEvent(request) {
         if (event.type == "message" && event.message.type == "text") {
 
             //  場所情報を取得する
-            console.log("placeInfo");
-            place.callPlace(event.message.text).then((result) => {
-                console.log(placeInfo);
-                placeInfo = result
-
+            place.callPlace(event.message.text).then((plaecResult) => {
+                
                 // プレビュー用の画像を取得する
-                console.log("photoInfo");
-                photo.callPhoto(placeInfo.photo_reference).then((result) => {
-                    console.log(photoUrl);
-                    photoUrl = result
-
+                photo.callPhoto(plaecResult.photo_reference).then((photoResult) => {
+                
                     // 返信メッセージをイベントオブジェクトに挿入する
-                    console.log("events_push");
                     events_processed.push(bot.replyMessage(event.replyToken, {
                         "type": "template",
                         "altText": "This is a carousel template",
@@ -77,8 +68,8 @@ function handleEvent(request) {
                             "type": "carousel",
                             "columns": [
                                 {
-                                    "thumbnailImageUrl": photoUrl,
-                                    "text": placeInfo.name,
+                                    "thumbnailImageUrl": photoResult,
+                                    "text": plaecResult.name,
                                     "actions": {
                                         "type": "message",
                                         "label": "photoReference",
