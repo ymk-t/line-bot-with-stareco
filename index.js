@@ -58,35 +58,37 @@ function handleEvent(request) {
 
             //  場所情報を取得する
             console.log("placeInfo");
-            placeInfo = place.callPlace(event.message.text);                
-            console.log(placeInfo);
-
+            place.callPlace(event.message.text).then((result) => {
+                console.log(placeInfo);
+                placeInfo = result
+            });
+            
             // プレビュー用の画像を取得する
             console.log("photoInfo");
-            photoUrl = photo.callPhoto(placeInfo.photo_reference)
-            console.log(photoUrl);
+            photo.callPhoto(placeInfo.photo_reference).then((result) => {
+                console.log(photoUrl);
+                photoUrl = result
+            });
         }          
         console.log("events_push");
 
-        Promise.all(placeInfo,photoUrl).then((response) => {
-            events_processed.push(bot.replyMessage(event.replyToken, {
-                "type": "template",
-                "altText": "This is a carousel template",
-                "template": {
-                    "type": "carousel",
-                    "columns": [
-                        {
-                            "thumbnailImageUrl": photoUrl,
-                            "text": placeInfo.name,
-                            "actions": {
-                                "type": "message",
-                                "label": "photoReference",
-                                "text": "photoReference"
-                            }
+        events_processed.push(bot.replyMessage(event.replyToken, {
+            "type": "template",
+            "altText": "This is a carousel template",
+            "template": {
+                "type": "carousel",
+                "columns": [
+                    {
+                        "thumbnailImageUrl": photoUrl,
+                        "text": placeInfo.name,
+                        "actions": {
+                            "type": "message",
+                            "label": "photoReference",
+                            "text": "photoReference"
                         }
-                    ]
-                }
-            }))
-        })
+                    }
+                ]
+            }
+        }));
     })
 }
