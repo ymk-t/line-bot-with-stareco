@@ -55,12 +55,14 @@ function handleEvent(request) {
         if (event.type == "message" && event.message.type == "text") {
 
             //  場所情報を取得する
-            place.callPlace(event.message.text).then((plaecResult) => {
+            place.callPlace(event.message.text).then((placeResult) => {
                 
                 // プレビュー用の画像を取得する
-                photo.callPhoto(plaecResult.photo_reference).then((photoResult) => {
+                console.log(placeResult.name)
+                photo.callPhoto(placeResult.photo_reference).then((photoResult) => {
                 
                     // 返信メッセージをイベントオブジェクトに挿入する
+                    console.log(photoResult)
                     events_processed.push(bot.replyMessage(event.replyToken, {
                         "type": "template",
                         "altText": "This is a carousel template",
@@ -69,7 +71,7 @@ function handleEvent(request) {
                             "columns": [
                                 {
                                     "thumbnailImageUrl": photoResult,
-                                    "text": plaecResult.name,
+                                    "text": placeResult.name,
                                     "actions": {
                                         "type": "message",
                                         "label": "photoReference",
