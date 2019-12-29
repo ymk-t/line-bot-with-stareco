@@ -69,7 +69,6 @@ function handleEvent(request) {
         console.log("events_push");
 
         Promise.all(placeInfo,photoUrl).then((response) => {
-            console.log(response);
             events_processed.push(bot.replyMessage(event.replyToken, {
                 "type": "template",
                 "altText": "This is a carousel template",
