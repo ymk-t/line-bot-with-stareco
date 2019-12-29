@@ -58,18 +58,19 @@ function handleEvent(request) {
             place.callPlace(event.message.text).then((placeResult) => {
                 
                 // プレビュー用の画像を取得する
-                console.log(placeResult.name)
                 photo.callPhoto(placeResult.photo_reference).then((photoResult) => {
                 
                     // 返信メッセージをイベントオブジェクトに挿入する
-                    console.log(photoResult)
-                    console.log(event.replyToken)
-                    console.log(placeResult.name)
-                    events_processed.push(bot.replyMessage(event.replyToken, {
+                    events_processed.push(bot.replyMessage(event.replyToken, [{
+                        "type": "text",
+                        "text": placeResult.name,
+                    },
+                    {
                         "type": "image",
                         "originalContentUrl": photoResult,
                         "previewImageUrl": photoResult
-                    }));
+                    }
+                    ]));
                 });
             });
         }          
