@@ -67,23 +67,27 @@ function handleEvent(request) {
             console.log(photoUrl);
         }          
         console.log("events_push");
-        events_processed.push(bot.replyMessage(event.replyToken, {
-            "type": "template",
-            "altText": "This is a carousel template",
-            "template": {
-                "type": "carousel",
-                "columns": [
-                    {
-                        "thumbnailImageUrl": photoUrl,
-                        "text": placeInfo.name,
-                        "actions": {
-                            "type": "message",
-                            "label": "photoReference",
-                            "text": "photoReference"
+
+        Promise.all(placeInfo,photoUrl).then((response) => {
+            console.log(response);
+            events_processed.push(bot.replyMessage(event.replyToken, {
+                "type": "template",
+                "altText": "This is a carousel template",
+                "template": {
+                    "type": "carousel",
+                    "columns": [
+                        {
+                            "thumbnailImageUrl": photoUrl,
+                            "text": placeInfo.name,
+                            "actions": {
+                                "type": "message",
+                                "label": "photoReference",
+                                "text": "photoReference"
+                            }
                         }
-                    }
-                ]
-            }
-        }))
+                    ]
+                }
+            }))
+        })
     })
 }
