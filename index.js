@@ -61,34 +61,35 @@ function handleEvent(request) {
             place.callPlace(event.message.text).then((result) => {
                 console.log(placeInfo);
                 placeInfo = result
-            });
-            
-            // プレビュー用の画像を取得する
-            console.log("photoInfo");
-            photo.callPhoto(placeInfo.photo_reference).then((result) => {
-                console.log(photoUrl);
-                photoUrl = result
+
+                // プレビュー用の画像を取得する
+                console.log("photoInfo");
+                photo.callPhoto(placeInfo.photo_reference).then((result) => {
+                    console.log(photoUrl);
+                    photoUrl = result
+
+                    // 返信メッセージをイベントオブジェクトに挿入する
+                    console.log("events_push");
+                    events_processed.push(bot.replyMessage(event.replyToken, {
+                        "type": "template",
+                        "altText": "This is a carousel template",
+                        "template": {
+                            "type": "carousel",
+                            "columns": [
+                                {
+                                    "thumbnailImageUrl": photoUrl,
+                                    "text": placeInfo.name,
+                                    "actions": {
+                                        "type": "message",
+                                        "label": "photoReference",
+                                        "text": "photoReference"
+                                    }
+                                }
+                            ]
+                        }
+                    }));
+                });
             });
         }          
-        console.log("events_push");
-
-        events_processed.push(bot.replyMessage(event.replyToken, {
-            "type": "template",
-            "altText": "This is a carousel template",
-            "template": {
-                "type": "carousel",
-                "columns": [
-                    {
-                        "thumbnailImageUrl": photoUrl,
-                        "text": placeInfo.name,
-                        "actions": {
-                            "type": "message",
-                            "label": "photoReference",
-                            "text": "photoReference"
-                        }
-                    }
-                ]
-            }
-        }));
     })
 }
