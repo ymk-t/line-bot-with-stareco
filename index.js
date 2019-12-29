@@ -39,7 +39,7 @@ server.post('/bot/webhook', middle, (req, res) => {
     Promise
         .all(events_processed)
         .then((result) => {
-            console(`${response.length} event(s) processed.`)
+            console(`${result.length} event(s) processed.`)
             res.json(result)
         })
         .catch((errorMessage) => {
@@ -57,12 +57,14 @@ function handleEvent(request) {
         if (event.type == "message" && event.message.type == "text") {
 
             //  場所情報を取得する
+            console.log("placeInfo");
             placeInfo = place.callPlace(event.message.text);                
             
             // プレビュー用の画像を取得する
+            console.log("photoInfo");
             photoUrl = photo.callPhoto(placeInfo.photo_reference)
         }          
-        
+        console.log("events_push");
         events_processed.push(bot.replyMessage(event.replyToken, {
             "type": "template",
             "altText": "This is a carousel template",
