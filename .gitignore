@@ -1,2 +1,8 @@
-node_modules
+node_modules/*
+!node_modules/@line
+node_modules/@line/*
+!node_modules/@line/bot-sdk
+node_modules/@line/bot-sdk/*
+!node_modules/@line/bot-sdk/dist
+node_modules/@line/bot-sdk/dist/*
 !node_modules/@line/bot-sdk/dist/http.js
