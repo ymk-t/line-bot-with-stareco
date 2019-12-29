@@ -39,7 +39,7 @@ server.post('/bot/webhook', middle, (req, res) => {
     Promise
         .all(events_processed)
         .then((result) => {
-            console(`${result.length} event(s) processed.`)
+            console.log(`${result.length} event(s) processed.`)
         })
         .catch((errorMessage) => {
             console.log("【index.js】" + errorMessage);
