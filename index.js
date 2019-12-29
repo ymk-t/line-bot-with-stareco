@@ -23,49 +23,63 @@ const bot = new line.Client(line_config);
 // -----------------------------------------------------------------------------
 // ルーター設定
 let middle = line.middleware(line_config);
+
+// すべてのイベント処理のプロミスを格納する配列。
+let events_processed = [];
+
 server.post('/bot/webhook', middle, (req, res) => {
 
     // 先行してLINE側にステータスコード200でレスポンスする。
     res.sendStatus(200);
 
+    // イベント処理機能を実行
+    handleEvent(req);
+
+    // イベントが何件処理されたか確認する
     Promise
-      .all(req.body.events.map(handleEvent))
-      .then((result) => res.json(result))
-      .catch((errorMessage) => {
-        console.log("【indev.js】" + errorMessage);
+        .all(events_processed)
+        .then((result) => {
+            console(`${response.length} event(s) processed.`)
+            res.json(result)
+        })
+        .catch((errorMessage) => {
+            console.log("【index.js】" + errorMessage);
     })
 })
 // イベントオブジェクトを順次処理。
-async function handleEvent(event) {
+async function handleEvent(request) {
     let placeInfo = {};
     let photoUrl = "";
 
-    // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
-    if (event.type == "message" && event.message.type == "text") {
+    req.body.events.forEach((event) => {
 
-        //  場所情報を取得する
-        placeInfo = await place.callPlace(event.message.text);                
+        // この処理の対象をイベントタイプがメッセージで、かつ、テキストタイプだった場合に限定。
+        if (event.type == "message" && event.message.type == "text") {
+
+            //  場所情報を取得する
+            placeInfo = await place.callPlace(event.message.text);                
+            
+            // プレビュー用の画像を取得する
+            photoUrl = await photo.callPhoto(placeInfo.photo_reference)
+        }          
         
-        // プレビュー用の画像を取得する
-        photoUrl = await photo.callPhoto(placeInfo.photo_reference)
-    }          
-    
-    return bot.replyMessage(event.replyToken, {
-        "type": "template",
-        "altText": "This is a carousel template",
-        "template": {
-            "type": "carousel",
-            "columns": [
-                {
-                    "thumbnailImageUrl": photoUrl,
-                    "text": placeInfo.name,
-                    "actions": {
-                        "type": "message",
-                        "label": "photoReference",
-                        "text": "photoReference"
+        events_processed.push(bot.replyMessage(event.replyToken, {
+            "type": "template",
+            "altText": "This is a carousel template",
+            "template": {
+                "type": "carousel",
+                "columns": [
+                    {
+                        "thumbnailImageUrl": photoUrl,
+                        "text": placeInfo.name,
+                        "actions": {
+                            "type": "message",
+                            "label": "photoReference",
+                            "text": "photoReference"
+                        }
                     }
-                }
-            ]
-        }
+                ]
+            }
+        }))
     })
 }
