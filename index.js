@@ -59,10 +59,12 @@ function handleEvent(request) {
             //  場所情報を取得する
             console.log("placeInfo");
             placeInfo = place.callPlace(event.message.text);                
-            
+            console.log(placeInfo);
+
             // プレビュー用の画像を取得する
             console.log("photoInfo");
             photoUrl = photo.callPhoto(placeInfo.photo_reference)
+            console.log(photoInfo);
         }          
         console.log("events_push");
         events_processed.push(bot.replyMessage(event.replyToken, {
